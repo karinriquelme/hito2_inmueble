@@ -1,15 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+  <div class="text-center mb-3">
     <h2>Dashboard - Arrendatario</h2>
-    <form method="GET" action="{% url 'dashboard' %}">
+  </div>
+
+  <div class="container text-center mb-3 ">
+    <form class="row g-3" method="GET" action="{% url 'dashboard' %}">
         <label for="region">Región:</label>
-        <select name="region" id="region">
-            <option value="">Seleccionar Región</option>
-            {% for region in regiones %}
-                <option value="{{ region.id }}">{{ region.nombre }}</option>
-            {% endfor %}
-        </select>
+        <div class="col-auto">
+          <select name="region" id="region">
+              <option value="">Seleccionar Región</option>
+              {% for region in regiones %}
+                  <option value="{{ region.id }}">{{ region.nombre }}</option>
+              {% endfor %}
+          </select>
+      </div>
+      <div class="col-auto">
         <label for="comuna">Comuna:</label>
         <select name="comuna" id="comuna">
             <option value="">Seleccionar Comuna</option>
@@ -17,9 +24,16 @@
                 <option value="{{ comuna.id }}">{{ comuna.nombre }}</option>
             {% endfor %}
         </select>
-        <button type="submit">Filtrar</button>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-primary" type="submit">Filtrar</button>
+      </div>
     </form>
-    <h3>Inmuebles Disponibles:</h3>
+  </div>
+
+    <div class="text-center mb-5">
+      <h3>Inmuebles Disponibles:</h3>
+    </div> 
     <ul>
         <section class="container mx-auto pt-5">
             <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
@@ -29,17 +43,22 @@
                       <img class="card-img-top" src="/media/{{inm.imagen}}" alt="Card image cap">
                     </a>
                     <div class="card-body">
-                      <h5 class="card-title">{{ inm.name }}</h5>
+                      <h5 class="card-title">
+                        <span class="p-1 me-2 text-primary bg-primary-subtle border border-primary-subtle rounded-3">
+                        {{inm.tipo_de_inmueble}}
+                        </span> 
+                        {{ inm.nombre }}
+                      </h5>
                       <p class="card-text text-justify">
-                          {% if inm.descripcion|length > 10 %}
-                              {{ inm.descripcion|slice:":10" }}... <a href="">descripcion</a>
+                          {% if inm.descripcion|length > 50 %}
+                              {{ inm.descripcion|slice:":50" }}... <a href="">descripcion</a>
                           {% else %}
                               {{ inm.descripcion}}
                           {% endif %}
                       </p>
                   </div>
                     <div class="card-footer">
-                      <a href="{% url 'detalle' inm.id %}">detalle del inmueble</a>
+                      <a  class="btn btn-primary" href="{% url 'detalle' inm.id %}">Detalles</a>
                     </div>
                   </div>
                 </div>
@@ -48,18 +67,28 @@
           </section>
         
     </ul>
-    <h3>Solicitudes de Arriendo:</h3>
+    <div class="text-center mb-3">
+      <h3>Mis solicitudes de Arriendo:</h3>
+    </div>
     <section class="container mx-auto pt-5">
     <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
     {% for solicitud in solicitudes %}
-    <div class="card mb-3 {% if solicitud.estado == 'aceptado' %}bg-success{% elif solicitud.estado == 'pendiente' %}bg-warning{% elif solicitud.estado == 'rechazado' %}bg-danger{% else %}bg-secondary{% endif %}" style="max-width: 18rem;"">
+    <div class="card mb-3 
+      {% if solicitud.estado == 'aceptado' %}bg-success
+      {% elif solicitud.estado == 'pendiente' %}bg-warning
+      {% elif solicitud.estado == 'rechazado' %}bg-danger
+      {% else %}bg-secondary{% endif %}" style="max-width: 18rem;">
+    </div>  
       <div class="card-header">{{solicitud.estado}}</div>
-      <div class="card-body">
-        <h5 class="card-title">{{ solicitud }}</h5>
-        <P>{{solicitud.mensaje}}</P>
-      </div>
-    </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ solicitud }}</h5>
+          <P>{{solicitud.mensaje}}</P>
+        </div>
+      
     {% endfor %}
     </div>
-   </section>
+  </section>
+  <script>
+    $(document).ready(function())
+  </script>
 {% endblock %}

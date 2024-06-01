@@ -73,8 +73,8 @@ def solicitudes_arrendador(request):
     else:
         # Redirigir a otra página si el usuario no es un arrendador
         return redirect('index')  
-  
-  
+
+
 @login_required
 def crear_inmueble(request):
     if request.method == 'POST':
@@ -121,7 +121,7 @@ def dashboard(request):
         comunas = Comuna.objects.all()
         region_id = request.GET.get('region')
         comuna_id = request.GET.get('comuna')
-        inmuebles = Inmueble.objects.all()
+        inmuebles = Inmueble.objects.filter(disponible=True)
         if region_id:
             inmuebles = inmuebles.filter(comuna__region_id=region_id)
         if comuna_id:
@@ -140,7 +140,7 @@ def dashboard(request):
 @login_required
 def actualizar_usuario(request):
     if request.method == 'POST':
-        form = CustomUserChangeForm(request.POST, instance=request.user.usuario)
+        form = CustomUserChangeForm(request.POST, instance=request.user)
         print(form)
         if form.is_valid():
             form.save()
@@ -160,3 +160,6 @@ def cambiar_estado_solicitud(request, solicitud_id):
             solicitud.estado = nuevo_estado
             solicitud.save()
     return redirect('dashboard')
+
+def comunas(request):
+    region_id=request.GET.get('region')
